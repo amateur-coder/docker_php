@@ -1,8 +1,19 @@
-FROM centos:latest
+FROM amazonlinux:2023
 MAINTAINER Mkm
-RUN yum install -y php
-RUN yum install -y iputils
+
+# Install PHP and iputils (for networking utilities like ping)
+RUN dnf install -y php iputils
+
+# Create the directory if it doesn't exist and copy index.php to the correct location
+RUN mkdir -p /var/www/html
 COPY index.php /var/www/html/
+
+# Set the working directory
 WORKDIR /var/www
-CMD [ "php", "-S", "0.0.0.0:80", "-t", "html"] 
+
+# Command to start the PHP built-in server
+CMD [ "php", "-S", "0.0.0.0:80", "-t", "/var/www/html" ]
+
+# Expose port 80 for web traffic
 EXPOSE 80
+
